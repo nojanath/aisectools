@@ -4,10 +4,10 @@
 
 /* Brand-level fallback so the body never flashes a different color
    if the inline style is stripped during view transitions. */
-html { background-color: #0a1628; }
+html { background-color: #13243d; }
 body {
   font-family: 'Montserrat', system-ui, sans-serif;
-  background-color: #0a1628;
+  background-color: #13243d;
 }
 
 .font-mono {
@@ -25,7 +25,7 @@ body {
 
 /* Scrollbar — restrained, matches the lifted card surface so the body stays calm. */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: #0a1628; }
+::-webkit-scrollbar-track { background: #13243d; }
 ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 6px; }
 ::-webkit-scrollbar-thumb:hover { background: #2a4a76; }
 

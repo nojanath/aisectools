@@ -23,7 +23,7 @@ const { slices: pieSlices, data: pieData } = buildPieChart(toolsData as Tool[]);
 ---
 
 <Layout title="AISecTools - Open Source AI Security Tools">
-  <div class="relative overflow-hidden border-b border-slate-800/60" style="background-color: #0f1d33;">
+  <div class="relative overflow-hidden border-b border-slate-800/60" style="background-color: #1b2d4f;">
     <div class="absolute inset-x-0 top-0 h-px" style="background: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.55) 50%, transparent 100%);"></div>
     <div class="absolute inset-0 opacity-30" style="background: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.06) 50%, transparent 100%); animation: shimmer 4s infinite;"></div>
     <div class="relative px-4 py-2.5 flex items-center justify-center gap-3">
@@ -57,7 +57,7 @@ const { slices: pieSlices, data: pieData } = buildPieChart(toolsData as Tool[]);
       id="search-input"
       placeholder="Search tools..."
       class="w-3/4 mx-auto mb-4 px-4 py-2.5 border border-slate-800 text-zinc-100 placeholder-zinc-500 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition"
-      style="background-color: #0f1d33;"
+      style="background-color: #1b2d4f;"
     />
 
     <div class="flex flex-wrap justify-center gap-4 mb-4">
@@ -98,7 +98,7 @@ const { slices: pieSlices, data: pieData } = buildPieChart(toolsData as Tool[]);
           href={tool.repo}
           target="_blank"
           rel="noopener noreferrer"
-          class={`tool-card group bg-[#0f1d33] hover:bg-[#13243d] text-zinc-200 border border-slate-800/60 rounded-lg p-5 w-full hover:border-cyan-500/40 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.18)] transition-all duration-300 flex flex-col ${tool.archived ? 'opacity-70' : ''}`}
+          class={`tool-card group bg-[#1b2d4f] hover:bg-[#22335a] text-zinc-200 border border-slate-800/60 rounded-lg p-5 w-full hover:border-cyan-500/40 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.18)] transition-all duration-300 flex flex-col ${tool.archived ? 'opacity-70' : ''}`}
           data-name={tool.name.toLowerCase()}
           data-description={tool.description.toLowerCase()}
           data-tags={tool.tags.join(',').toLowerCase()}
@@ -163,7 +163,7 @@ const { slices: pieSlices, data: pieData } = buildPieChart(toolsData as Tool[]);
   </div>
 
   <div id="stats-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-    <div class="border border-slate-800 rounded-lg shadow-2xl p-6 max-w-xl w-full relative overflow-auto" style="background-color: #0f1d33;">
+    <div class="border border-slate-800 rounded-lg shadow-2xl p-6 max-w-xl w-full relative overflow-auto" style="background-color: #1b2d4f;">
       <button id="stats-close" class="absolute top-2 right-2 text-zinc-500 hover:text-zinc-200 rounded-full cursor-pointer p-1" aria-label="Close">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>

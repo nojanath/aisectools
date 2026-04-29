@@ -3,8 +3,8 @@ export function getUpdateBadge(date: string): { text: string; color: string } {
   const updatedDate = new Date(date);
   const diffDays = Math.floor((today.getTime() - updatedDate.getTime()) / (1000 * 60 * 60 * 24));
 
-  // Slightly stronger fills (/20) and rings (/30-/40) since the card surface is now
-  // #0f1d33 (lifted) rather than near-pure-black, so badges need a touch more presence
+  // Slightly stronger fills (/20) and rings (/30-/40) since the card surface is the
+  // lifted navy #1b2d4f rather than near-pure-black, so badges need more presence
   // to read at the same perceived weight.
   if (diffDays <= 7) return { text: 'Updated this week', color: 'bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/40' };
   if (diffDays <= 30) return { text: 'Updated last month', color: 'bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/30' };
