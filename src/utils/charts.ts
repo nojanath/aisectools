@@ -1,24 +1,24 @@
 import type { Tool, PieSlice } from './types';
 
 const LANGUAGE_COLORS: Record<string, string> = {
-  JavaScript: '#a8a29e',
-  Python: '#5eead4',
-  Go: '#7dd3fc',
-  'C++': '#a78bfa',
-  Rust: '#fdba74',
-  Java: '#fbbf24',
-  TypeScript: '#3b82f6',
-  PHP: '#a78bfa',
-  HTML: '#fb923c',
-  CSS: '#6366f1',
-  Shell: '#84cc16',
-  Ruby: '#fb7185',
-  'C#': '#86efac',
-  HCL: '#d8b4fe',
-  PowerShell: '#93c5fd',
-  Jupyter: '#fcd34d',
-  'Jupyter Notebook': '#fcd34d',
-  Unknown: '#71717a',
+  JavaScript: '#F7DF1E',
+  Python: '#3776AB',
+  Go: '#00ADD8',
+  'C++': '#00599C',
+  Rust: '#DEA584',
+  Java: '#F89820',
+  TypeScript: '#3178C6',
+  PHP: '#8892BF',
+  HTML: '#E34F26',
+  CSS: '#264DE4',
+  Shell: '#89E051',
+  Ruby: '#701516',
+  'C#': '#178600',
+  HCL: '#844FBA',
+  PowerShell: '#012456',
+  Jupyter: '#DA5B0B',
+  'Jupyter Notebook': '#DA5B0B',
+  Unknown: '#BDC3C7',
 };
 
 export function buildPieChart(tools: Tool[]): { slices: PieSlice[]; data: { label: string; value: number; color: string }[] } {
@@ -36,9 +36,9 @@ export function buildPieChart(tools: Tool[]): { slices: PieSlice[]; data: { labe
   const pieData = topLangs.map(([lang, count]) => ({
     label: lang,
     value: count,
-    color: LANGUAGE_COLORS[lang] || '#71717a',
+    color: LANGUAGE_COLORS[lang] || '#999',
   }));
-  if (othersCount > 0) pieData.push({ label: 'Others', value: othersCount, color: '#52525b' });
+  if (othersCount > 0) pieData.push({ label: 'Others', value: othersCount, color: '#999' });
 
   const total = pieData.reduce((sum, d) => sum + d.value, 0);
   let currentAngle = 0;

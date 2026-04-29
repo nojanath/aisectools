@@ -108,7 +108,6 @@ Netflix-Skunkworks/railguard-skill
 noperator/slice
 NVIDIA-NeMo/Guardrails
 NVIDIA/garak
-NVIDIA/NemoClaw
 NVIDIA/OpenShell
 openai/openai-security-bots
 OpenMined/PyDP
@@ -126,7 +125,6 @@ protectai/vulnhuntr
 provos/ironcurtain
 PurCL/RepoAudit
 QData/TextAttack
-qwibitai/nanoclaw
 Repello-AI/Agent-Wiz
 riseandignite/mcp-shield
 rowboatlabs/rowboat
