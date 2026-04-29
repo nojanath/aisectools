@@ -1,0 +1,369 @@
+---
+import Layout from '../layouts/Layout.astro';
+import toolsData from '../data/tools.json';
+import '../styles/global.css';
+import type { Tool } from '../utils/types';
+import { getUpdateBadge, formatDate } from '../utils/badges';
+import { buildPieChart } from '../utils/charts';
+
+const threeYearsAgo = new Date();
+threeYearsAgo.setFullYear(threeYearsAgo.getFullYear() - 3);
+const threeYearsAgoISO = threeYearsAgo.toISOString();
+
+const languages = [...new Set((toolsData as Tool[]).map((t) => t.language).filter(Boolean))].sort();
+
+const tools = (toolsData as Tool[]).map((tool) => ({
+  ...tool,
+  badge: getUpdateBadge(tool.last_commit),
+  formattedDate: formatDate(tool.last_commit),
+  formattedStars: tool.stars.toLocaleString(),
+}));
+
+const { slices: pieSlices, data: pieData } = buildPieChart(toolsData as Tool[]);
+---
+
+<Layout title="AISecTools - Open Source AI Security Tools">
+  <div class="relative overflow-hidden border-b border-slate-800/60" style="background-color: #0f1d33;">
+    <div class="absolute inset-x-0 top-0 h-px" style="background: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.55) 50%, transparent 100%);"></div>
+    <div class="absolute inset-0 opacity-30" style="background: linear-gradient(90deg, transparent 0%, rgba(34, 211, 238, 0.06) 50%, transparent 100%); animation: shimmer 4s infinite;"></div>
+    <div class="relative px-4 py-2.5 flex items-center justify-center gap-3">
+      <a href="https://thompsoninfosec.com" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-2 text-sm font-medium tracking-wide">
+        <span class="text-zinc-400">Made by</span>
+        <span class="font-semibold text-cyan-400 group-hover:text-cyan-300 transition-colors duration-200">Thompson InfoSec</span>
+        <span class="text-slate-700 mx-1">|</span>
+        <span class="hidden sm:inline text-zinc-400 group-hover:text-zinc-200 transition-colors duration-200">Security Consulting & vCISO Services</span>
+        <svg class="w-4 h-4 text-cyan-400 transform group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="max-w-8xl mx-auto p-4 flex-grow flex flex-col">
+    <div class="flex items-center justify-center mb-2 mt-4">
+      <h1 class="text-center text-zinc-50" style="font-size: 2.75rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;">
+        <span class="text-cyan-400 font-mono">&gt;</span> AI Security Tools
+      </h1>
+      <a href="https://github.com/nojanath/aisectools" target="_blank" rel="noopener noreferrer" class="ml-3 text-zinc-500 hover:text-zinc-200 transition-colors">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.66-.22.66-.49 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.61.07-.61 1 .07 1.53 1.04 1.53 1.04.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.99 1.04-2.69-.1-.26-.45-1.28.1-2.67 0 0 .84-.27 2.75 1.03a9.58 9.58 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.39.2 2.41.1 2.67.65.7 1.04 1.6 1.04 2.69 0 3.85-2.34 4.69-4.57 4.94.36.31.69.92.69 1.86 0 1.34-.01 2.42-.01 2.75 0 .27.16.59.67.49A10.01 10.01 0 0 0 22 12c0-5.52-4.48-10-10-10Z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+    <p class="text-center text-zinc-400 text-base mb-6 max-w-2xl mx-auto leading-relaxed">Open-source guardrails, scanners, and red-team frameworks for AI systems</p>
+
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search tools..."
+      class="w-3/4 mx-auto mb-4 px-4 py-2.5 border border-slate-800 text-zinc-100 placeholder-zinc-500 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition"
+      style="background-color: #0f1d33;"
+    />
+
+    <div class="flex flex-wrap justify-center gap-4 mb-4">
+      <select id="sort-select" class="block py-2 pl-3 pr-10 w-auto text-sm text-zinc-400 bg-transparent border-0 border-b-2 border-slate-700 focus:outline-none focus:ring-0 focus:border-cyan-500/60 cursor-pointer">
+        <option value="" disabled selected>Sort By</option>
+        <option value="stars">Stars</option>
+        <option value="last_commit">Last Update</option>
+        <option value="name">Name</option>
+      </select>
+
+      <select id="language-select" class="block py-2 pr-10 px-0 w-auto text-sm text-zinc-400 bg-transparent border-0 border-b-2 border-slate-700 focus:outline-none focus:ring-0 focus:border-cyan-500/60 cursor-pointer">
+        <option value="">All Languages</option>
+        {languages.map((lang) => (
+          <option value={lang}>{lang}</option>
+        ))}
+      </select>
+
+      <select id="platform-select" class="block py-2 pr-10 px-0 w-auto text-sm text-zinc-400 bg-transparent border-0 border-b-2 border-slate-700 focus:outline-none focus:ring-0 focus:border-cyan-500/60 cursor-pointer">
+        <option value="">All Platforms</option>
+        <option value="github">GitHub</option>
+        <option value="gitlab">GitLab</option>
+      </select>
+
+      <button id="stats-button" class="block py-2 px-0 w-auto text-sm text-zinc-400 hover:text-zinc-200 bg-transparent border-0 border-b-2 border-slate-700 hover:border-cyan-500/60 focus:outline-none rounded-none cursor-pointer transition-colors">
+        Stats
+      </button>
+
+      <button id="inactive-toggle" class="block py-2 px-0 w-auto text-sm text-zinc-400 hover:text-zinc-200 bg-transparent border-0 border-b-2 border-slate-700 hover:border-cyan-500/60 focus:outline-none rounded-none cursor-pointer transition-colors" title="Show projects older than 3 years old.">
+        Show Inactive
+      </button>
+    </div>
+
+    <p id="tool-count" class="text-center text-sm text-zinc-500 mb-4 font-mono"></p>
+
+    <div id="tool-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 min-h-[50vh]">
+      {tools.map((tool) => (
+        <a
+          href={tool.repo}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={`tool-card group bg-[#0f1d33] hover:bg-[#13243d] text-zinc-200 border border-slate-800/60 rounded-lg p-5 w-full hover:border-cyan-500/40 hover:shadow-[0_0_0_1px_rgba(34,211,238,0.18)] transition-all duration-300 flex flex-col ${tool.archived ? 'opacity-70' : ''}`}
+          data-name={tool.name.toLowerCase()}
+          data-description={tool.description.toLowerCase()}
+          data-tags={tool.tags.join(',').toLowerCase()}
+          data-language={tool.language}
+          data-platform={tool.platform}
+          data-archived={tool.archived ? '1' : '0'}
+          data-stars={tool.stars}
+          data-last-commit={tool.last_commit}
+        >
+          <div class="flex items-start justify-between gap-2">
+            <h2 class="text-lg font-bold text-zinc-50 leading-snug group-hover:text-cyan-300 transition-colors break-all">{tool.name}</h2>
+            <div class="flex items-center gap-1 shrink-0">
+              {tool.archived && (
+                <span class="text-[11px] uppercase px-1.5 py-0.5 rounded font-mono bg-rose-900/30 text-rose-300 ring-1 ring-rose-700/40" title="This repository is archived and no longer maintained">
+                  Archived
+                </span>
+              )}
+              <span class={`text-[11px] uppercase px-1.5 py-0.5 rounded font-mono ${tool.platform === 'gitlab' ? 'bg-orange-500/15 text-orange-300 ring-1 ring-orange-500/40' : 'bg-slate-800 text-zinc-300 ring-1 ring-slate-700'}`}>
+                {tool.platform === 'gitlab' ? 'GitLab' : 'GitHub'}
+              </span>
+            </div>
+          </div>
+          <div class="flex justify-between mt-3 text-sm">
+            <div class="flex items-center space-x-1.5">
+              <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <span class="text-zinc-300 font-mono text-xs">{tool.formattedStars}</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-zinc-400 text-xs font-mono">{tool.language}</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-start mt-3">
+            <span class={`px-2 py-0.5 rounded-full text-[11px] font-medium ${tool.badge.color}`} title={tool.formattedDate}>
+              {tool.badge.text}
+            </span>
+          </div>
+          <p class="text-sm text-zinc-400 mt-3 flex-grow leading-relaxed">{tool.description}</p>
+          <hr class="my-4 border-slate-800" />
+          <div class="flex flex-wrap gap-1.5 mt-1">
+            {tool.tags.map((tag: string) => (
+              <span role="button" tabindex="0" class="tag-btn bg-slate-800/60 text-zinc-300 text-[11px] rounded px-2 py-0.5 hover:bg-cyan-500/15 hover:text-cyan-300 cursor-pointer transition-colors select-none" data-tag={tag}>{tag}</span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div id="empty-state" class="hidden flex-col items-center justify-center min-h-[50vh]">
+      <p class="text-zinc-400 text-lg">No results found. Try adjusting your search.</p>
+    </div>
+
+    {tools.length === 0 && (
+      <div class="flex flex-col items-center justify-center min-h-[50vh] text-center max-w-xl mx-auto">
+        <p class="text-zinc-200 text-lg mb-3">No tools loaded yet.</p>
+        <p class="text-zinc-400 text-sm leading-relaxed">
+          Add repos to <code class="font-mono text-cyan-300 bg-slate-800 px-1.5 py-0.5 rounded">repos.txt</code>,
+          set <code class="font-mono text-cyan-300 bg-slate-800 px-1.5 py-0.5 rounded">GITHUB_TOKEN</code>,
+          and run <code class="font-mono text-cyan-300 bg-slate-800 px-1.5 py-0.5 rounded">node utils/fetchData/fetchRepoData.cjs</code>.
+        </p>
+      </div>
+    )}
+  </div>
+
+  <div id="stats-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+    <div class="border border-slate-800 rounded-lg shadow-2xl p-6 max-w-xl w-full relative overflow-auto" style="background-color: #0f1d33;">
+      <button id="stats-close" class="absolute top-2 right-2 text-zinc-500 hover:text-zinc-200 rounded-full cursor-pointer p-1" aria-label="Close">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <h2 class="text-2xl font-bold mb-6 text-zinc-50">Tool Statistics</h2>
+      <div class="mt-8">
+        <h3 class="text-base font-bold mb-4 text-zinc-200">Total Tool Count: <span class="text-cyan-400 font-mono">{toolsData.length}</span></h3>
+      </div>
+      <div class="mb-8">
+        <h3 class="text-base font-bold mb-3 text-zinc-200">Languages</h3>
+        <div class="w-full flex justify-center">
+          <svg viewBox="-1.2 -1.2 2.4 2.4" width="280" height="280">
+            {pieSlices.map((slice) => (
+              <path d={slice.path} fill={slice.color}>
+                <title>{slice.label}: {slice.value}</title>
+              </path>
+            ))}
+          </svg>
+        </div>
+        <div class="flex flex-wrap gap-3 mt-4 justify-center">
+          {pieData.map((d) => (
+            <div class="flex items-center gap-1.5 text-sm text-zinc-300">
+              <span class="w-3 h-3 rounded-full inline-block" style={`background-color: ${d.color}`}></span>
+              <span>{d.label} <span class="text-zinc-500 font-mono text-xs">({d.value})</span></span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+  </style>
+
+  <script is:inline define:vars={{ threeYearsAgoISO }}>
+    const searchInput = document.getElementById('search-input');
+    const sortSelect = document.getElementById('sort-select');
+    const languageSelect = document.getElementById('language-select');
+    const platformSelect = document.getElementById('platform-select');
+    const inactiveToggle = document.getElementById('inactive-toggle');
+    const toolGrid = document.getElementById('tool-grid');
+    const emptyState = document.getElementById('empty-state');
+    const toolCount = document.getElementById('tool-count');
+    const statsButton = document.getElementById('stats-button');
+    const statsModal = document.getElementById('stats-modal');
+    const statsClose = document.getElementById('stats-close');
+
+    let showInactive = false;
+    const allCards = [...toolGrid.querySelectorAll('.tool-card')];
+    const totalTools = allCards.length;
+    const threeYearsAgoDate = new Date(threeYearsAgoISO);
+
+    if (totalTools === 0) {
+      toolCount.style.display = 'none';
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('q')) searchInput.value = params.get('q');
+    if (params.get('lang')) languageSelect.value = params.get('lang');
+    if (params.get('platform')) platformSelect.value = params.get('platform');
+    if (params.get('sort')) sortSelect.value = params.get('sort');
+    if (params.get('inactive') === '1') {
+      showInactive = true;
+      inactiveToggle.textContent = 'Hide Inactive';
+      inactiveToggle.title = 'Hide projects older than 3 years old.';
+    }
+
+    function updateURL() {
+      const p = new URLSearchParams();
+      if (searchInput.value) p.set('q', searchInput.value);
+      if (languageSelect.value) p.set('lang', languageSelect.value);
+      if (platformSelect.value) p.set('platform', platformSelect.value);
+      if (sortSelect.value) p.set('sort', sortSelect.value);
+      if (showInactive) p.set('inactive', '1');
+      const qs = p.toString();
+      history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+    }
+
+    function applyFilters() {
+      const query = searchInput.value.toLowerCase();
+      const language = languageSelect.value;
+      const platform = platformSelect.value;
+      let visibleCards = [];
+
+      allCards.forEach(card => {
+        const name = card.dataset.name;
+        const desc = card.dataset.description;
+        const tags = card.dataset.tags;
+        const lang = card.dataset.language;
+        const cardPlatform = card.dataset.platform;
+        const lastCommit = card.dataset.lastCommit;
+
+        let show = true;
+
+        if (query && !name.includes(query) && !desc.includes(query) && !tags.includes(query)) {
+          show = false;
+        }
+
+        if (language && lang !== language) {
+          show = false;
+        }
+
+        if (platform && cardPlatform !== platform) {
+          show = false;
+        }
+
+        if (!showInactive && new Date(lastCommit) < threeYearsAgoDate) {
+          show = false;
+        }
+
+        card.style.display = show ? '' : 'none';
+        if (show) visibleCards.push(card);
+      });
+
+      const sortKey = sortSelect.value;
+      if (sortKey) {
+        visibleCards.sort((a, b) => {
+          if (sortKey === 'stars') return Number(b.dataset.stars) - Number(a.dataset.stars);
+          if (sortKey === 'last_commit') return new Date(b.dataset.lastCommit).getTime() - new Date(a.dataset.lastCommit).getTime();
+          if (sortKey === 'name') return a.dataset.name.localeCompare(b.dataset.name);
+          return 0;
+        });
+        visibleCards.forEach(card => toolGrid.appendChild(card));
+      }
+
+      toolCount.textContent = visibleCards.length === totalTools
+        ? `${totalTools} tools`
+        : `Showing ${visibleCards.length} of ${totalTools} tools`;
+
+      if (visibleCards.length === 0 && totalTools > 0) {
+        toolGrid.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+      } else {
+        toolGrid.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+      }
+
+      updateURL();
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    sortSelect.addEventListener('change', applyFilters);
+    languageSelect.addEventListener('change', applyFilters);
+    platformSelect.addEventListener('change', applyFilters);
+
+    inactiveToggle.addEventListener('click', () => {
+      showInactive = !showInactive;
+      inactiveToggle.textContent = showInactive ? 'Hide Inactive' : 'Show Inactive';
+      inactiveToggle.title = showInactive
+        ? 'Hide projects older than 3 years old.'
+        : 'Show projects older than 3 years old.';
+      applyFilters();
+    });
+
+    function openModal() {
+      statsModal.classList.remove('hidden');
+      statsModal.classList.add('flex');
+    }
+    function closeModal() {
+      statsModal.classList.add('hidden');
+      statsModal.classList.remove('flex');
+    }
+    statsButton.addEventListener('click', openModal);
+    statsClose.addEventListener('click', closeModal);
+    statsModal.addEventListener('click', (e) => {
+      if (e.target === statsModal) closeModal();
+    });
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.tag-btn');
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        searchInput.value = btn.dataset.tag;
+        applyFilters();
+        searchInput.focus();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const btn = e.target.closest && e.target.closest('.tag-btn');
+      if (btn && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        searchInput.value = btn.dataset.tag;
+        applyFilters();
+        searchInput.focus();
+        return;
+      }
+      if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+        e.preventDefault();
+        searchInput.focus();
+      }
+      if (e.key === 'Escape') closeModal();
+    });
+
+    applyFilters();
+  </script>
+</Layout>
