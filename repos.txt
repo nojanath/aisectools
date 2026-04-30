@@ -81,6 +81,7 @@ knostic/AgentSonar
 knostic/OpenAnt
 knostic/openclaw-detect
 knostic/openclaw-telemetry
+kpolley/redai
 lasso-security/mcp-gateway
 LaurieWired/GhidraMCP
 liu00222/Open-Prompt-Injection
