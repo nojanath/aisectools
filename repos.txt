@@ -64,6 +64,7 @@ GreyDGL/PentestGPT
 groovyBugify/aws-security-mcp
 guardrails-ai/guardrails
 hackvertor/repeat-strike
+HarmonicSecurity/claudit-sec
 harishsg993010/damn-vulnerable-MCP-server
 HQ1995/vibe-security-radar
 humanlayer/humanlayer
